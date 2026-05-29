@@ -1,4 +1,4 @@
-@extends('layouts.master')
+﻿@extends('layouts.master')
 @section('content')
     <div class="page-wrapper">
         <div class="content container-fluid">
@@ -263,7 +263,7 @@
                                     <img src="{{ URL::to('assets/img/icons/invoices-icon1.svg') }}" alt="">
                                 </span>
                                 <div class="inovices-dash-count">
-                                    <div class="inovices-amount">$8,78,797</div>
+                                    <div class="inovices-amount">TZS 8,78,797</div>
                                 </div>
                             </div>
                             <p class="inovices-all">All Invoices <span>50</span></p>
@@ -278,7 +278,7 @@
                                     <img src="{{ URL::to('assets/img/icons/invoices-icon2.svg') }}" alt="">
                                 </span>
                                 <div class="inovices-dash-count">
-                                    <div class="inovices-amount">$4,5884</div>
+                                    <div class="inovices-amount">TZS 4,5884</div>
                                 </div>
                             </div>
                             <p class="inovices-all">Paid Invoices <span>60</span></p>
@@ -293,7 +293,7 @@
                                     <img src="{{ URL::to('assets/img/icons/invoices-icon3.svg') }}" alt="">
                                 </span>
                                 <div class="inovices-dash-count">
-                                    <div class="inovices-amount">$2,05,545</div>
+                                    <div class="inovices-amount">TZS 2,05,545</div>
                                 </div>
                             </div>
                             <p class="inovices-all">Unpaid Invoices <span>70</span></p>
@@ -308,7 +308,7 @@
                                     <img src="{{ URL::to('assets/img/icons/invoices-icon4.svg') }}" alt="">
                                 </span>
                                 <div class="inovices-dash-count">
-                                    <div class="inovices-amount">$8,8,797</div>
+                                    <div class="inovices-amount">TZS 8,8,797</div>
                                 </div>
                             </div>
                             <p class="inovices-all">Cancelled Invoices <span>80</span></p>
@@ -351,7 +351,7 @@
                                                     </a>
                                                 </h2>
                                             </td>
-                                            <td class="text-primary">$1,54,220</td>
+                                            <td class="text-primary">TZS 1,54,220</td>
                                             <td>23 Mar 2022</td>
                                             <td><span class="badge bg-success-light">Paid</span></td>
                                             <td class="text-end">
@@ -379,7 +379,7 @@
                                                     </a>
                                                 </h2>
                                             </td>
-                                            <td class="text-primary">$1,54,220</td>
+                                            <td class="text-primary">TZS 1,54,220</td>
                                             <td>23 Mar 2022</td>
                                             <td><span class="badge bg-success-light">Paid</span></td>
                                             <td class="text-end">

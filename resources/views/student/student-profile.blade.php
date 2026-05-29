@@ -1,246 +1,124 @@
-
 @extends('layouts.master')
 @section('content')
-    <div class="page-wrapper">
-        <div class="content container-fluid">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="page-sub-header">
-                            <h3 class="page-title">Student Details</h3>
-                            <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('student/add/page') }}">Student</a></li>
-                                <li class="breadcrumb-item active">Student Details</li>
-                            </ul>
-                        </div>
-                    </div>
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <!-- 1. TOP HEADER (BACK & PRINT) -->
+        <div class="page-header mb-4 no-print">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title text-primary font-black uppercase">Official Student Profile</h3>
+                </div>
+                <div class="col-auto d-flex gap-2">
+                    <a href="{{ route('student/list') }}" class="btn btn-dark rounded-pill px-4 font-black shadow-sm">
+                        <i class="fas fa-arrow-left me-2"></i> BACK TO LIST
+                    </a>
+                    <button onclick="window.print()" class="btn btn-outline-primary rounded-pill px-4 font-black shadow-sm">
+                        <i class="fas fa-print me-2"></i> PRINT PROFILE
+                    </button>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="about-info">
-                                <h4>Profile <span><a href="javascript:;"><i class="feather-more-vertical"></i></a></span></h4>
-                            </div>
-                            <div class="student-profile-head">
-                                <div class="profile-bg-img">
-                                    <img src="{{ URL::to('assets/img/profile-bg.jpg') }}" alt="Profile">
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-4">
-                                        <div class="profile-user-box">
-                                            <div class="profile-user-img">
-                                                <img src="{{ Storage::url('student-photos/'.$studentProfile->upload) }}" alt="Profile">
-                                                <div class="form-group students-up-files profile-edit-icon mb-0">
-                                                    <div class="uplod d-flex">
-                                                        <label class="file-upload profile-upbtn mb-0">
-                                                            <i class="far fa-edit me-2-3"></i><input type="file">
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="names-profiles">
-                                                <h4>{{ $studentProfile->first_name }} {{ $studentProfile->last_name }}</h4>
-                                                <h5>Computer Science</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 d-flex align-items-center">
-                                        <div class="follow-group">
-                                            <div class="students-follows">
-                                                <h5>Followers</h5>
-                                                <h4>2850</h4>
-                                            </div>
-                                            <div class="students-follows">
-                                                <h5>Followers</h5>
-                                                <h4>2850</h4>
-                                            </div>
-                                            <div class="students-follows">
-                                                <h5>Followers</h5>
-                                                <h4>2850</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 d-flex align-items-center">
-                                        <div class="follow-btn-group">
-                                            <button type="submit" class="btn btn-info follow-btns">Follow</button>
-                                            <button type="submit" class="btn btn-info message-btns">Message</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        </div>
+
+        <!-- THE UNIFIED CARD -->
+        <div class="card shadow-lg border-0" style="border-radius: 20px; overflow: hidden;">
+            
+            <!-- BLUE BANNER WITH PHOTO AND NAMES -->
+            <div class="p-4 d-flex align-items-center justify-content-between" style="background-color: #0d6efd !important;">
+                <div class="d-flex align-items-center">
+                    <img src="{{ $student->passport_photo ? asset($student->passport_photo) : asset('assets/img/default-avatar.png') }}" 
+                         class="rounded-circle border border-3 border-white shadow" 
+                         style="width: 100px; height: 100px; object-fit: cover;">
+                    <div class="ms-4">
+                        <h2 class="font-black uppercase mb-0" style="color: #000000 !important; font-weight: 900 !important; letter-spacing: -1px;">
+                            {{ $student->first_name }} {{ $student->middle_name }} {{ $student->last_name }}
+                        </h2>
+                        <p class="mb-0 font-bold uppercase" style="color: #333333; font-size: 0.8rem; opacity: 0.8;">STUDENT PROFILE</p>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <div class="student-personals-grp">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="heading-detail">
-                                            <h4>Personal Details :</h4>
-                                        </div>
-                                        <div class="personal-activity">
-                                            <div class="personal-icons">
-                                                <i class="feather-user"></i>
-                                            </div>
-                                            <div class="views-personal">
-                                                <h4>Name</h4>
-                                                <h5>{{ $studentProfile->first_name }} {{ $studentProfile->last_name }}</h5>
-                                            </div>
-                                        </div>
-                                        <div class="personal-activity">
-                                            <div class="personal-icons">
-                                                <img src="{{ URL::to('assets/img/icons/buliding-icon.svg') }}" alt="">
-                                            </div>
-                                            <div class="views-personal">
-                                                <h4>Department </h4>
-                                                <h5>Computer Science</h5>
-                                            </div>
-                                        </div>
-                                        <div class="personal-activity">
-                                            <div class="personal-icons">
-                                                <i class="feather-phone-call"></i>
-                                            </div>
-                                            <div class="views-personal">
-                                                <h4>Mobile</h4>
-                                                <h5>{{ $studentProfile->phone_number }}</h5>
-                                            </div>
-                                        </div>
-                                        <div class="personal-activity">
-                                            <div class="personal-icons">
-                                                <i class="feather-mail"></i>
-                                            </div>
-                                            <div class="views-personal">
-                                                <h4>Email</h4>
-                                                <h5><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="81e5e0e8f2f8c1e6ece0e8edafe2eeec">{{ $studentProfile->email }}</a>
-                                                </h5>
-                                            </div>
-                                        </div>
-                                        <div class="personal-activity">
-                                            <div class="personal-icons">
-                                                <i class="feather-user"></i>
-                                            </div>
-                                            <div class="views-personal">
-                                                <h4>Gender</h4>
-                                                <h5>{{ $studentProfile->gender }}</h5>
-                                            </div>
-                                        </div>
-                                        <div class="personal-activity">
-                                            <div class="personal-icons">
-                                                <i class="feather-calendar"></i>
-                                            </div>
-                                            <div class="views-personal">
-                                                <h4>Date of Birth</h4>
-                                                <h5>{{ $studentProfile->date_of_birth }}</h5>
-                                            </div>
-                                        </div>
-                                        <div class="personal-activity">
-                                            <div class="personal-icons">
-                                                <i class="feather-italic"></i>
-                                            </div>
-                                            <div class="views-personal">
-                                                <h4>Language</h4>
-                                                <h5>English, French, Bangla</h5>
-                                            </div>
-                                        </div>
-                                        <div class="personal-activity mb-0">
-                                            <div class="personal-icons">
-                                                <i class="feather-map-pin"></i>
-                                            </div>
-                                            <div class="views-personal">
-                                                <h4>Address</h4>
-                                                <h5>480, Estern Avenue, New York</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="student-personals-grp">
-                                <div class="card mb-0">
-                                    <div class="card-body">
-                                        <div class="heading-detail">
-                                            <h4>Skills:</h4>
-                                        </div>
-                                        <div class="skill-blk">
-                                            <div class="skill-statistics">
-                                                <div class="skills-head">
-                                                    <h5>Photoshop</h5>
-                                                    <p>90%</p>
-                                                </div>
-                                                <div class="progress mb-0">
-                                                    <div class="progress-bar bg-photoshop" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                            <div class="skill-statistics">
-                                                <div class="skills-head">
-                                                    <h5>Code editor</h5>
-                                                    <p>75%</p>
-                                                </div>
-                                                <div class="progress mb-0">
-                                                    <div class="progress-bar bg-editor" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                            <div class="skill-statistics mb-0">
-                                                <div class="skills-head">
-                                                    <h5>Illustrator</h5>
-                                                    <p>95%</p>
-                                                </div>
-                                                <div class="progress mb-0">
-                                                    <div class="progress-bar bg-illustrator" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-8">
-                            <div class="student-personals-grp">
-                                <div class="card mb-0">
-                                    <div class="card-body">
-                                        <div class="heading-detail">
-                                            <h4>About Me</h4>
-                                        </div>
-                                        <div class="hello-park">
-                                            <h5>Hello I am Daisy Parks</h5>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                                                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-                                                ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                                                aliquip ex commodo consequat. Duis aute irure dolor in reprehenderit
-                                                in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                                Excepteur officia deserunt mollit anim id est laborum.</p>
-                                            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                                                accusantium doloremque laudantium, totam inventore veritatis et
-                                                quasi architecto beatae vitae dicta sunt explicabo. </p>
-                                        </div>
-                                        <div class="hello-park">
-                                            <h5>Education</h5>
-                                            <div class="educate-year">
-                                                <h6>2008 - 2009</h6>
-                                                <p>Secondary Schooling at xyz school of secondary education, Mumbai.
-                                                </p>
-                                            </div>
-                                            <div class="educate-year">
-                                                <h6>2011 - 2012</h6>
-                                                <p>Higher Secondary Schooling at xyz school of higher secondary education, Mumbai.</p>
-                                            </div>
-                                            <div class="educate-year">
-                                                <h6>2012 - 2015</h6>
-                                                <p>Bachelor of Science at Abc College of Art and Science, Chennai.</p>
-                                            </div>
-                                            <div class="educate-year">
-                                                <h6>2015 - 2017</h6>
-                                                <p class="mb-0">Master of Science at Cdm College of Engineering and Technology, Pune.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+                <div class="text-end">
+                    <span class="font-black uppercase" style="color: #000000 !important; font-size: 1.2rem; font-weight: 900 !important;">
+                        {{ $student->course ?? $student->course_applied ?? 'N/A' }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="card-body p-5 bg-white">
+                
+                <!-- SECTION 1: PERSONAL INFO (Grid 3) -->
+                <h6 class="font-black border-bottom pb-2 mb-4 text-primary uppercase"><i class="fas fa-user-circle me-2"></i> 1. PERSONAL INFORMATION</h6>
+                <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Reg. Number</small><strong>{{ $student->admission_id }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">NIDA Number</small><strong>{{ $student->nida_number ?? '---' }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Gender</small><strong>{{ $student->gender }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Date of Birth</small><strong>{{ $student->date_of_birth }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Education Level</small><strong>{{ $student->education_level ?? '---' }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Phone Number</small><strong>{{ $student->phone_number }}</strong></div>
+                    <div class="col-md-12"><small class="text-muted d-block text-uppercase font-bold">Email Address</small><strong>{{ $student->email ?? '---' }}</strong></div>
+                </div>
+
+                <!-- SECTION 2: RESIDENCE (Grid 3) -->
+                <h6 class="font-black border-bottom pb-2 mb-4 text-primary uppercase"><i class="fas fa-map-marker-alt me-2"></i> 2. RESIDENCE & CONTACT</h6>
+                <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Region</small><strong>{{ $student->region }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">District</small><strong>{{ $student->district }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Ward</small><strong>{{ $student->ward }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Street</small><strong>{{ $student->street }}</strong></div>
+                </div>
+
+                <!-- SECTION 3: FATHER'S INFO (Grid 3) -->
+                <h6 class="text-dark uppercase mb-3 border-bottom pb-2" style="font-weight: 700 !important; color: #000000 !important;">FATHER'S DETAILS</h6>
+                <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Full Name</small><strong>{{ $student->father_first_name }} {{ $student->father_middle_name }} {{ $student->father_last_name }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Phone</small><strong>{{ $student->father_phone }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Region/District</small><strong>{{ $student->father_region }}, {{ $student->father_district }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Ward/Street</small><strong>{{ $student->father_ward }}, {{ $student->father_street }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Address</small><strong>{{ $student->father_address }}</strong></div>
+                </div>
+
+                <!-- SECTION 4: MOTHER'S INFO (Grid 3) -->
+                <h6 class="text-dark uppercase mb-3 border-bottom pb-2" style="font-weight: 700 !important; color: #000000 !important;">MOTHER'S DETAILS</h6>
+                <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Full Name</small><strong>{{ $student->mother_first_name }} {{ $student->mother_middle_name }} {{ $student->mother_last_name }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Phone</small><strong>{{ $student->mother_phone }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Region/District</small><strong>{{ $student->mother_region }}, {{ $student->mother_district }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Ward/Street</small><strong>{{ $student->mother_ward }}, {{ $student->mother_street }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Address</small><strong>{{ $student->mother_address }}</strong></div>
+                </div>
+
+                <!-- SECTION 5: GUARDIAN INFO (Grid 3) -->
+                <h6 class="text-dark uppercase mb-3 border-bottom pb-2" style="font-weight: 700 !important; color: #000000 !important;">GUARDIAN'S DETAILS</h6>
+                <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Full Name</small><strong>{{ $student->guardian_first_name }} {{ $student->guardian_middle_name }} {{ $student->guardian_last_name }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Phone</small><strong>{{ $student->guardian_phone }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Location</small><strong>{{ $student->guardian_region }}, {{ $student->guardian_district }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Ward/Street</small><strong>{{ $student->guardian_ward }}, {{ $student->guardian_street }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Address</small><strong>{{ $student->guardian_address }}</strong></div>
+                </div>
+
+                <!-- SECTION 6: SPONSOR INFO (Grid 3) -->
+                <h6 class="font-black border-bottom pb-2 mb-4 text-primary uppercase"><i class="fas fa-hand-holding-usd me-2"></i> 3. SPONSOR / GUARANTOR INFORMATION</h6>
+                <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Organization</small><strong>{{ $student->sponsor_organization ?? 'SELF SPONSORED' }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Sponsor Phone</small><strong>{{ $student->sponsor_phone }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Sponsor Email</small><strong>{{ $student->sponsor_email }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Supervisor Name</small><strong>{{ $student->sponsor_first_name }} {{ $student->sponsor_middle_name }} {{ $student->sponsor_last_name }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Title/Position</small><strong>{{ $student->sponsor_title }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Region/District</small><strong>{{ $student->sponsor_region }}, {{ $student->sponsor_district }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Ward/Street</small><strong>{{ $student->sponsor_ward }}, {{ $student->sponsor_street }}</strong></div>
+                    <div class="col"><small class="text-muted d-block text-uppercase font-bold">Business</small><strong>{{ $student->sponsor_business }}</strong></div>
+                </div>
+
+                <!-- MEDICAL FORM BUTTON -->
+                <div class="text-center border-top pt-5 pb-5">
+                    <a href="{{ asset($student->medical_form) }}" target="_blank" 
+                       class="btn btn-outline-primary rounded-pill px-5 py-3 shadow-sm" 
+                       style="border: 1.5px solid #0d6efd !important; font-weight: 900 !important; letter-spacing: 1px; font-size: 1.1rem; min-width: 350px;">
+                        <i class="fas fa-file-medical me-3" style="font-size: 1.3rem;"></i> 
+                        VERIFY MEDICAL FORM
+                    </a>
                 </div>
             </div>
         </div>
     </div>
+</div>
 @endsection

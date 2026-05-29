@@ -73,12 +73,11 @@
                                                 </div>
                                             </th>
                                             <th>ID</th>
-                                            <th>Name</th>
-                                            <th>Class</th>
+                                            <th>Full Name</th>
+                                            <th>Course</th>
                                             <th>DOB</th>
-                                            <th>Parent Name</th>
-                                            <th>Mobile Number</th>
-                                            <th>Address</th>
+                                            <th>Phone Number</th>
+                                            <th>Region</th>
                                             <th class="text-end">Action</th>
                                         </tr>
                                     </thead>
@@ -90,29 +89,34 @@
                                                     <input class="form-check-input" type="checkbox" value="something">
                                                 </div>
                                             </td>
-                                            <td>STD{{ ++$key }}</td>
+                                            <td>{{ $list->admission_id ?? 'STD'.str_pad(++$key, 3, '0', STR_PAD_LEFT) }}</td>
                                             <td hidden class="id">{{ $list->id }}</td>
-                                            <td hidden class="avatar">{{ $list->upload }}</td>
+                                            <td hidden class="avatar">{{ $list->passport_photo ?? $list->upload }}</td>
                                             <td>
                                                 <h2 class="table-avatar">
-                                                    <a href="student-details.html"class="avatar avatar-sm me-2">
-                                                        <img class="avatar-img rounded-circle" src="{{ asset($list->upload) }}" alt="">
+                                                    <a href="{{ url('student/profile/'.$list->id) }}" class="avatar avatar-sm me-2">
+                                                        <img class="avatar-img rounded-circle"
+                                                            src="{{ $list->passport_photo ? asset($list->passport_photo) : asset('assets/img/profiles/avatar-01.jpg') }}"
+                                                            alt="Kigamboni FDC Logo">
                                                     </a>
-                                                    <a href="student-details.html">{{ $list->first_name }} {{ $list->last_name }}</a>
+                                                    <a href="{{ url('student/profile/'.$list->id) }}">{{ $list->first_name }} {{ $list->middle_name }} {{ $list->last_name }}
+                                                    </a>
                                                 </h2>
                                             </td>
-                                            <td>{{ $list->class }} {{ $list->section }}</td>
-                                            <td>{{ $list->date_of_birth }}</td>
-                                            <td>Soeng Soeng</td>
-                                            <td>{{ $list->phone_number }}</td>
-                                            <td>110 Sen Sok Steet,PP</td>
+                                            <td>{{ $list->course ?? '—' }}</td>
+                                            <td>{{ $list->date_of_birth ?? '—' }}</td>
+                                            <td>{{ $list->phone_number ?? '—' }}</td>
+                                            <td>{{ $list->region ?? '—' }}</td>
                                             <td class="text-end">
                                                 <div class="actions">
-                                                    <a href="{{ url('student/edit/'.$list->id) }}" class="btn btn-sm bg-danger-light">
-                                                        <i class="far fa-edit me-2"></i>
+                                                    <a href="{{ url('student/profile/'.$list->id) }}" class="btn btn-sm bg-success-light me-1" title="View">
+                                                        <i class="far fa-eye"></i>
                                                     </a>
-                                                    <a class="btn btn-sm bg-danger-light student_delete" data-bs-toggle="modal" data-bs-target="#studentUser">
-                                                        <i class="far fa-trash-alt me-2"></i>
+                                                    <a href="{{ url('student/edit/'.$list->id) }}" class="btn btn-sm bg-danger-light" title="Edit">
+                                                        <i class="far fa-edit me-1"></i>
+                                                    </a>
+                                                    <a class="btn btn-sm bg-danger-light student_delete" data-bs-toggle="modal" data-bs-target="#studentUser" title="Delete">
+                                                        <i class="far fa-trash-alt me-1"></i>
                                                     </a>
                                                 </div>
                                             </td>

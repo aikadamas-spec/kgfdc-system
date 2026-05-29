@@ -7,7 +7,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="page-sub-header">
-                            <h3 class="page-title">Welcome Bruklin!</h3>
+                            <h3 class="page-title">Welcome, {{ Session::get('name') }}!</h3>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                                 <li class="breadcrumb-item active">Student</li>
@@ -282,94 +282,78 @@
                                     <h2>Upcoming Events</h2>
                                     <span><a href="javascript:;"><i class="feather-plus"></i></a></span>
                                 </div>
+
+                                @php
+                                    $nextMonday    = \Carbon\Carbon::now()->next('Monday');
+                                    $nextWednesday = \Carbon\Carbon::now()->next('Wednesday');
+                                    $nextFriday    = \Carbon\Carbon::now()->next('Friday');
+                                    $nextSaturday  = \Carbon\Carbon::now()->next('Saturday');
+                                @endphp
+
+                                {{-- Event 1: Semester Examination --}}
                                 <div class="upcome-event-date">
-                                    <h3>10 Jan</h3>
+                                    <h3>{{ $nextMonday->format('d M') }}</h3>
                                     <span><i class="fas fa-ellipsis-h"></i></span>
                                 </div>
                                 <div class="calendar-details">
-                                    <p>08:00 am</p>
+                                    <p>09:00 AM</p>
                                     <div class="calendar-box normal-bg">
                                         <div class="calandar-event-name">
-                                            <h4>Botony</h4>
-                                            <h5>Lorem ipsum sit amet</h5>
+                                            <h4>Semester Examination</h4>
+                                            <h5>All students must attend</h5>
                                         </div>
-                                        <span>08:00 - 09:00 am</span>
+                                        <span>09:00 AM - 12:00 PM</span>
                                     </div>
                                 </div>
-                                <div class="calendar-details">
-                                    <p>09:00 am</p>
-                                    <div class="calendar-box normal-bg">
-                                        <div class="calandar-event-name">
-                                            <h4>Botony</h4>
-                                            <h5>Lorem ipsum sit amet</h5>
-                                        </div>
-                                        <span>09:00 - 10:00 am</span>
-                                    </div>
-                                </div>
-                                <div class="calendar-details">
-                                    <p>10:00 am</p>
-                                    <div class="calendar-box normal-bg">
-                                        <div class="calandar-event-name">
-                                            <h4>Botony</h4>
-                                            <h5>Lorem ipsum sit amet</h5>
-                                        </div>
-                                        <span>10:00 - 11:00 am</span>
-                                    </div>
-                                </div>
+
+                                {{-- Event 2: Practical Workshop Assessment --}}
                                 <div class="upcome-event-date">
-                                    <h3>10 Jan</h3>
+                                    <h3>{{ $nextWednesday->format('d M') }}</h3>
                                     <span><i class="fas fa-ellipsis-h"></i></span>
                                 </div>
                                 <div class="calendar-details">
-                                    <p>08:00 am</p>
+                                    <p>10:30 AM</p>
                                     <div class="calendar-box normal-bg">
                                         <div class="calandar-event-name">
-                                            <h4>English</h4>
-                                            <h5>Lorem ipsum sit amet</h5>
+                                            <h4>Practical Workshop Assessment</h4>
+                                            <h5>Bring all required materials</h5>
                                         </div>
-                                        <span>08:00 - 09:00 am</span>
+                                        <span>10:30 AM - 01:00 PM</span>
                                     </div>
                                 </div>
-                                <div class="calendar-details">
-                                    <p>09:00 am</p>
-                                    <div class="calendar-box normal-bg">
-                                        <div class="calandar-event-name">
-                                            <h4>Mathematics </h4>
-                                            <h5>Lorem ipsum sit amet</h5>
-                                        </div>
-                                        <span>09:00 - 10:00 am</span>
-                                    </div>
+
+                                {{-- Event 3: Staff Meeting --}}
+                                <div class="upcome-event-date">
+                                    <h3>{{ $nextFriday->format('d M') }}</h3>
+                                    <span><i class="fas fa-ellipsis-h"></i></span>
                                 </div>
                                 <div class="calendar-details">
-                                    <p>10:00 am</p>
-                                    <div class="calendar-box normal-bg">
-                                        <div class="calandar-event-name">
-                                            <h4>History</h4>
-                                            <h5>Lorem ipsum sit amet</h5>
-                                        </div>
-                                        <span>10:00 - 11:00 am</span>
-                                    </div>
-                                </div>
-                                <div class="calendar-details">
-                                    <p>11:00 am</p>
+                                    <p>02:00 PM</p>
                                     <div class="calendar-box break-bg">
                                         <div class="calandar-event-name">
-                                            <h4>Break</h4>
-                                            <h5>Lorem ipsum sit amet</h5>
+                                            <h4>Staff Meeting: Term Review</h4>
+                                            <h5>All teaching staff required</h5>
                                         </div>
-                                        <span>11:00 - 12:00 am</span>
+                                        <span>02:00 - 04:00 PM</span>
                                     </div>
+                                </div>
+
+                                {{-- Event 4: Community Outreach --}}
+                                <div class="upcome-event-date">
+                                    <h3>{{ $nextSaturday->format('d M') }}</h3>
+                                    <span><i class="fas fa-ellipsis-h"></i></span>
                                 </div>
                                 <div class="calendar-details">
-                                    <p>11:30 am</p>
+                                    <p>08:00 AM</p>
                                     <div class="calendar-box normal-bg">
                                         <div class="calandar-event-name">
-                                            <h4>History</h4>
-                                            <h5>Lorem ipsum sit amet</h5>
+                                            <h4>Community Outreach Program</h4>
+                                            <h5>Kigamboni Community Centre</h5>
                                         </div>
-                                        <span>11:30 - 12:00 am</span>
+                                        <span>08:00 AM - 12:00 PM</span>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>

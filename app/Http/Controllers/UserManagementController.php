@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Hash;
-use App\Rules\MatchOldPassword;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\User;
@@ -134,14 +133,22 @@ class UserManagementController extends Controller
     public function changePassword(Request $request)
     {
         $request->validate([
-            'current_password'     => ['required', new MatchOldPassword],
-            'new_password'         => ['required'],
+            'current_password'     => ['required'],
+            'new_password'         => ['required', 'min:8'],
             'new_confirm_password' => ['same:new_password'],
         ]);
 
-        User::find(auth()->user()->id)->update(['password'=> Hash::make($request->new_password)]);
-        DB::commit();
-        return redirect()->intended('home')->with('success', 'User change successfully :)');
+        $user = auth()->user();
+
+        // Verify current password manually
+        if (!\Hash::check($request->current_password, $user->password)) {
+            return redirect()->back()->with('error', 'The current password you entered is incorrect.');
+        }
+
+        // Update to new password
+        $user->update(['password' => \Hash::make($request->new_password)]);
+
+        return redirect()->back()->with('success', 'Password changed successfully! :)');
     }
 
     /** get users data */

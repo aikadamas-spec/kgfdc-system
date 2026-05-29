@@ -153,10 +153,10 @@
                                                 <tr class="add-row">
                                                     <td><input type="text" class="form-control @error('items.*') is-invalid @enderror" name="items[]" value="{{ old('items.0') }}"></td>
                                                     <td><input type="text" class="form-control @error('category.*') is-invalid @enderror" name="category[]" value="{{ old('category.0') }}"></td>
-                                                    <td><input type="text" class="form-control @error('quantity.*') is-invalid @enderror" name="quantity[]" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" value="{{ old('quantity.0') }}"></td>
-                                                    <td><input type="text" class="form-control price @error('price.*') is-invalid @enderror" name="price[]" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" value="{{ old('price.0') }}"></td>
-                                                    <td><input type="text" class="form-control amount @error('amount.*') is-invalid @enderror" name="amount[]" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" value="{{ old('amount.0') }}"></td>
-                                                    <td><input type="text" class="form-control discount @error('discount.*') is-invalid @enderror" name="discount[]" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" value="{{ old('discount.0') }}"></td>
+                                                    <td><input type="text" class="form-control @error('quantity.*') is-invalid @enderror" name="quantity[]" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, 'TZS 1');" value="{{ old('quantity.0') }}"></td>
+                                                    <td><input type="text" class="form-control price @error('price.*') is-invalid @enderror" name="price[]" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, 'TZS 1');" value="{{ old('price.0') }}"></td>
+                                                    <td><input type="text" class="form-control amount @error('amount.*') is-invalid @enderror" name="amount[]" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, 'TZS 1');" value="{{ old('amount.0') }}"></td>
+                                                    <td><input type="text" class="form-control discount @error('discount.*') is-invalid @enderror" name="discount[]" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, 'TZS 1');" value="{{ old('discount.0') }}"></td>
                                                     <td class="add-remove text-end">
                                                         <a class="add-btn me-2"><i class="fas fa-plus-circle"></i></a>
                                                         <a class="copy-btn me-2"><i class="fe fe-copy"></i></a>
@@ -259,11 +259,11 @@
                                             <div class="invoice-total-box">
                                                 <div class="invoice-total-inner">
                                                     <input type="hidden" name="taxable_amount" id="taxable_amount" value="21">
-                                                    <p>Taxable Amount <span id="">$21</span></p>
+                                                    <p>Taxable Amount <span id="">TZS 21</span></p>
                                                     <p>Round Off
                                                         <input type="checkbox" name="round_off" id="status_1" class="check" value="54">
                                                         <label for="status_1" class="checktoggle">checkbox</label>
-                                                        <span id="">$54</span>
+                                                        <span id="">TZS 54</span>
                                                     </p>
                                                     <div class="links-info-one">
                                                         <div class="links-info"></div>
@@ -280,7 +280,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="invoice-total-footer">
-                                                    <h4>Total Amount <span id="total_amount">$<span class="total_amount">00</span></span></h4>
+                                                    <h4>Total Amount <span id="total_amount">TZS <span class="total_amount">00</span></span></h4>
                                                     <input type="hidden" id="total_amounts" name="total_amount">
                                                 </div>
                                             </div>
@@ -395,26 +395,26 @@
                                                             <tr>
                                                                 <td>Dell Laptop</td>
                                                                 <td>Laptop</td>
-                                                                <td>$1,110</td>
+                                                                <td>TZS 1,110</td>
                                                                 <th>2</th>
                                                                 <th>2%</th>
-                                                                <td class="text-end">$400</td>
+                                                                <td class="text-end">TZS 400</td>
                                                             </tr>
                                                             <tr>
                                                                 <td>HP Laptop</td>
                                                                 <td>Laptop</td>
-                                                                <td>$1,500</td>
+                                                                <td>TZS 1,500</td>
                                                                 <th>3</th>
                                                                 <th>6%</th>
-                                                                <td class="text-end">$3,000</td>
+                                                                <td class="text-end">TZS 3,000</td>
                                                             </tr>
                                                             <tr>
                                                                 <td>Apple Ipad</td>
                                                                 <td>Ipad</td>
-                                                                <td>$11,500</td>
+                                                                <td>TZS 11,500</td>
                                                                 <th>1</th>
                                                                 <th>10%</th>
-                                                                <td class="text-end">$11,000</td>
+                                                                <td class="text-end">TZS 11,000</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -436,13 +436,13 @@
                                             <div class="invoice-total-card">
                                                 <div class="invoice-total-box">
                                                     <div class="invoice-total-inner">
-                                                        <p>Taxable <span>$6,660.00</span></p>
-                                                        <p>Additional Charges <span>$6,660.00</span></p>
-                                                        <p>Discount <span>$3,300.00</span></p>
-                                                        <p class="mb-0">Sub total <span>$3,300.00</span></p>
+                                                        <p>Taxable <span>TZS 6,660.00</span></p>
+                                                        <p>Additional Charges <span>TZS 6,660.00</span></p>
+                                                        <p>Discount <span>TZS 3,300.00</span></p>
+                                                        <p class="mb-0">Sub total <span>TZS 3,300.00</span></p>
                                                     </div>
                                                     <div class="invoice-total-footer">
-                                                        <h4>Total Amount <span>$143,300.00</span></h4>
+                                                        <h4>Total Amount <span>TZS 143,300.00</span></h4>
                                                     </div>
                                                 </div>
                                             </div>

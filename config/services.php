@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'beem' => [
+        'api_key'        => env('BEEM_API_KEY'),
+        'secret_key'     => env('BEEM_SECRET_KEY'),
+        'sender_id'      => env('BEEM_SENDER_ID', 'KgFDC'),
+        'vendor_id'      => env('BEEM_VENDOR_ID'),
+        'webhook_secret' => env('BEEM_WEBHOOK_SECRET'),
+    ],
+
 ];

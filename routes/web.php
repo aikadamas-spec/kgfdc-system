@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FrontendController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,9 +14,93 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login');
-});
+// =============================================
+// LANGUAGE SWITCHER
+// =============================================
+Route::get('/change-language/{lang}', function (string $lang) {
+    if (in_array($lang, ['en', 'sw'])) {
+        session(['locale' => $lang]);
+    }
+    return redirect()->back();
+})->name('language.switch');
+
+// =============================================
+// PUBLIC WEBSITE — FRONT DOOR
+// =============================================
+
+// Homepage
+Route::get('/', [FrontendController::class, 'index'])->name('frontend.home');
+
+// ── Application Module ──────────────────────────────────────────────────────
+Route::get('/apply',                    [FrontendController::class, 'showApplyForm'])->name('apply.start');
+Route::post('/apply/submit',            [FrontendController::class, 'submitApplication'])->name('apply.submit');
+Route::get('/apply/checkout/{reference}', [FrontendController::class, 'showCheckout'])->name('apply.checkout');
+
+// Beem payment initiation (AJAX POST from checkout page)
+Route::post('/apply/beem/initiate',     [FrontendController::class, 'initiateBeemPayment'])->name('apply.beem.initiate');
+
+// Beem webhook — called by Beem servers on payment confirmation (no CSRF)
+Route::post('/apply/beem/webhook',      [FrontendController::class, 'beemWebhook'])->name('apply.beem.webhook')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+// Payment success page
+Route::get('/apply/success/{reference}', [FrontendController::class, 'paymentSuccess'])->name('apply.success');
+
+// Course list by type (AJAX)
+Route::get('/get-courses/{type}', [FrontendController::class, 'getCoursesByType'])->name('apply.courses');
+
+// Search
+Route::get('/search', [FrontendController::class, 'search'])->name('frontend.search');
+
+// Kuhusu Sisi
+Route::get('/historia', [FrontendController::class, 'historia'])->name('frontend.historia');
+Route::get('/dira-na-dhima', [FrontendController::class, 'diraNaDhima'])->name('frontend.dira');
+Route::get('/lengo-madhumuni-na-wajibu', [FrontendController::class, 'lengo'])->name('frontend.lengo');
+Route::get('/utawala', [FrontendController::class, 'utawala'])->name('frontend.utawala');
+Route::get('/wafanyakazi', [FrontendController::class, 'wafanyakazi'])->name('frontend.wafanyakazi');
+Route::get('/wahitimu', [FrontendController::class, 'wahitimu'])->name('frontend.wahitimu');
+
+// Kozi
+Route::get('/kozi-za-muda-mrefu', [FrontendController::class, 'koziMudaMrefu'])->name('frontend.kozi-mrefu');
+Route::get('/kozi-za-muda-mfupi', [FrontendController::class, 'koziMudaMfupi'])->name('frontend.kozi-mfupi');
+
+// Idara
+Route::get('/ufundi-wa-magari', [FrontendController::class, 'ufundiWaMagari'])->name('frontend.ufundi-magari');
+Route::get('/ushonaji', [FrontendController::class, 'ushonaji'])->name('frontend.ushonaji');
+Route::get('/ufundi-uashi', [FrontendController::class, 'ufundiUashi'])->name('frontend.uashi');
+Route::get('/ufundi-umeme-majumbani', [FrontendController::class, 'ufundiUmemeMajumbani'])->name('frontend.umeme-majumbani');
+Route::get('/ufundi-umeme-magari', [FrontendController::class, 'ufundiUmemeMagari'])->name('frontend.umeme-magari');
+Route::get('/uchomeleaji-na-uungaji-vyuma', [FrontendController::class, 'uchomeleaji'])->name('frontend.uchomeleaji');
+Route::get('/ufundi-bomba', [FrontendController::class, 'ufundiBomba'])->name('frontend.ufundi-bomba');
+Route::get('/tehama', [FrontendController::class, 'tehama'])->name('frontend.tehama');
+Route::get('/huduma-za-mechanic', [FrontendController::class, 'hudumaZaMechanic'])->name('frontend.mechanic');
+
+// Maisha Chuoni
+Route::get('/malazi', [FrontendController::class, 'malazi'])->name('frontend.malazi');
+Route::get('/michezo-na-burudani', [FrontendController::class, 'michezo'])->name('frontend.michezo');
+Route::get('/uongozi-wa-wanafunzi', [FrontendController::class, 'uongoziWaWanafunzi'])->name('frontend.uongozi');
+Route::get('/sheria-ndogo-za-wanafunzi', [FrontendController::class, 'sheriaNdogo'])->name('frontend.sheria');
+Route::get('/ratiba-ya-chuo', [FrontendController::class, 'ratibaYaChuo'])->name('frontend.ratiba');
+
+// Kujiunga
+Route::get('/sifa-za-muombaji', [FrontendController::class, 'sifaZaMuombaji'])->name('frontend.sifa');
+Route::get('/mahitaji-ya-kujiunga', [FrontendController::class, 'mahitajiYaKujiunga'])->name('frontend.mahitaji');
+Route::get('/hatua-za-kujiunga', [FrontendController::class, 'hatuzaKujiunga'])->name('frontend.hatua');
+
+// Habari
+Route::get('/habari-picha', [FrontendController::class, 'habariPicha'])->name('frontend.habari');
+
+// Wasiliana
+Route::get('/wasiliana-nasi', [FrontendController::class, 'wasilianaNasi'])->name('frontend.wasiliana');
+Route::post('/wasiliana-nasi/tuma', [\App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
+
+// Sera na Masharti
+Route::get('/sera-ya-faragha', [FrontendController::class, 'seraYaFaragha'])->name('frontend.faragha');
+Route::get('/sera-ya-vidakuzi', [FrontendController::class, 'seraYaVidakuzi'])->name('frontend.vidakuzi');
+Route::get('/masharti-ya-matumizi', [FrontendController::class, 'mashartiyaMatumizi'])->name('frontend.masharti');
+
+// =============================================
+// BACK OFFICE — DASHBOARD (auth protected)
+// =============================================
 
 Route::group(['middleware'=>'auth'],function()
 {
@@ -55,6 +140,9 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
         Route::get('user/profile/page', 'userProfile')->middleware('auth')->name('user/profile/page');
         Route::get('teacher/dashboard', 'teacherDashboardIndex')->middleware('auth')->name('teacher/dashboard');
         Route::get('student/dashboard', 'studentDashboardIndex')->middleware('auth')->name('student/dashboard');
+
+        // ── DEV ONLY: seed test visitor locations for map testing ──────────
+        Route::get('/activate-admin-map', 'simulateTraffic')->middleware('auth')->name('activate-admin-map');
     });
 
     // ----------------------------- user controller ---------------------//
@@ -71,6 +159,7 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
     // ------------------------ setting -------------------------------//
     Route::controller(Setting::class)->group(function () {
         Route::get('setting/page', 'index')->middleware('auth')->name('setting/page');
+        Route::post('setting/update', 'update')->middleware('auth')->name('setting/update');
     });
 
     // ------------------------ student -------------------------------//
@@ -82,6 +171,7 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
         Route::get('student/edit/{id}', 'studentEdit'); // view for edit
         Route::post('student/update', 'studentUpdate')->name('student/update'); // update record student
         Route::post('student/delete', 'studentDelete')->name('student/delete'); // delete record student
+        Route::patch('student/status/{id}', 'updateStatus')->middleware('auth')->name('student/status'); // approve or reject
         Route::get('student/profile/{id}', 'studentProfile')->middleware('auth'); // profile student
     });
 
@@ -140,8 +230,19 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
 
     // ----------------------- accounts ----------------------------//
     Route::controller(AccountsController::class)->group(function () {
-        Route::get('account/fees/collections/page', 'index')->middleware('auth')->name('account/fees/collections/page'); // account/fees/collections/page
-        Route::get('add/fees/collection/page', 'addFeesCollection')->middleware('auth')->name('add/fees/collection/page'); // add/fees/collection
-        Route::post('fees/collection/save', 'saveRecord')->middleware('auth')->name('fees/collection/save'); // fees/collection/save
+        Route::get('account/fees/collections/page', 'index')->middleware('auth')->name('account/fees/collections/page');
+        Route::get('add/fees/collection/page', 'addFeesCollection')->middleware('auth')->name('add/fees/collection/page');
+        Route::post('fees/collection/save', 'saveRecord')->middleware('auth')->name('fees/collection/save');
     });
+
+    // ----------------------- contact messages --------------------//
+    Route::controller(\App\Http\Controllers\ContactController::class)->group(function () {
+        Route::get('messages/list', 'index')->middleware('auth')->name('messages/list');
+        Route::post('messages/delete', 'destroy')->middleware('auth')->name('messages/delete');
+    });
+
+    // ----------------------- kamati za chuo ----------------------//
+    Route::get('admin/kamati-za-chuo', [\App\Http\Controllers\KamatiController::class, 'index'])
+        ->middleware('auth')
+        ->name('admin/kamati-za-chuo');
 });

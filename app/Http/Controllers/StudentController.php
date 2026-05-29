@@ -6,8 +6,9 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\Student;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use DB;
-
 
 class StudentController extends Controller
 {
@@ -15,14 +16,14 @@ class StudentController extends Controller
     public function student()
     {
         $studentList = Student::all();
-        return view('student.student',compact('studentList'));
+        return view('student.student', compact('studentList'));
     }
 
     /** index page student grid */
     public function studentGrid()
     {
         $studentList = Student::all();
-        return view('student.student-grid',compact('studentList'));
+        return view('student.student-grid', compact('studentList'));
     }
 
     /** student add page */
@@ -34,161 +35,250 @@ class StudentController extends Controller
     /** Save Record */
     public function studentSave(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
+            // Student core
             'first_name'    => 'required|string|max:255',
             'last_name'     => 'required|string|max:255',
             'gender'        => 'required|not_in:0',
             'date_of_birth' => 'required|date',
-            'roll'          => 'required|string|max:50',
-            'blood_group'   => 'required|string|max:10',
-            'religion'      => 'required|string|max:50',
-            'email'         => 'required|email|unique:students,email',
-            'class'         => 'required|string|max:50',
-            'section'       => 'required|string|max:50',
-            'admission_id'  => 'required|string|unique:students,admission_id',
-            'phone_number'  => 'required|numeric|digits_between:8,15',
-            'upload'        => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'phone_number'  => 'nullable|numeric|digits_between:8,15',
+            'admission_id'  => 'nullable|string|unique:students,admission_id',
+            'middle_name'        => 'nullable|string|max:255',
+            'nida_number'        => 'nullable|string|max:255',
+            'email'              => 'nullable|email|max:255',
+            'region'             => 'nullable|string|max:255',
+            'district'           => 'nullable|string|max:255',
+            'ward'               => 'nullable|string|max:255',
+            'street'             => 'nullable|string|max:255',
+            'education_level'    => 'nullable|string|max:255',
+            'course_applied'     => 'nullable|string|max:255',
+            // Father
+            'father_first_name'  => 'nullable|string|max:255',
+            'father_middle_name' => 'nullable|string|max:255',
+            'father_last_name'   => 'nullable|string|max:255',
+            'father_phone'       => 'nullable|string|max:20',
+            'father_region'      => 'nullable|string|max:255',
+            'father_district'    => 'nullable|string|max:255',
+            'father_ward'        => 'nullable|string|max:255',
+            'father_street'      => 'nullable|string|max:255',
+            'father_address'     => 'nullable|string|max:255',
+            // Mother
+            'mother_first_name'  => 'nullable|string|max:255',
+            'mother_middle_name' => 'nullable|string|max:255',
+            'mother_last_name'   => 'nullable|string|max:255',
+            'mother_phone'       => 'nullable|string|max:20',
+            'mother_region'      => 'nullable|string|max:255',
+            'mother_district'    => 'nullable|string|max:255',
+            'mother_ward'        => 'nullable|string|max:255',
+            'mother_street'      => 'nullable|string|max:255',
+            'mother_address'     => 'nullable|string|max:255',
+            // Guardian
+            'guardian_first_name'  => 'nullable|string|max:255',
+            'guardian_middle_name' => 'nullable|string|max:255',
+            'guardian_last_name'   => 'nullable|string|max:255',
+            'guardian_address'     => 'nullable|string|max:255',
+            'guardian_region'      => 'nullable|string|max:255',
+            'guardian_district'    => 'nullable|string|max:255',
+            'guardian_ward'        => 'nullable|string|max:255',
+            'guardian_street'      => 'nullable|string|max:255',
+            'guardian_phone'       => 'nullable|string|max:20',
+            // Sponsor
+            'sponsor_first_name'   => 'nullable|string|max:255',
+            'sponsor_middle_name'  => 'nullable|string|max:255',
+            'sponsor_last_name'    => 'nullable|string|max:255',
+            'sponsor_region'       => 'nullable|string|max:255',
+            'sponsor_district'     => 'nullable|string|max:255',
+            'sponsor_ward'         => 'nullable|string|max:255',
+            'sponsor_street'       => 'nullable|string|max:255',
+            'sponsor_title'        => 'nullable|string|max:255',
+            'sponsor_organization' => 'nullable|string|max:255',
+            'sponsor_business'     => 'nullable|string|max:255',
+            'sponsor_phone'        => 'nullable|string|max:20',
+            'sponsor_email'        => 'nullable|email|max:255',
+            // Files
+            'passport_photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'medical_form'   => 'nullable|file|mimes:pdf,jpg,jpeg|max:5120',
         ]);
-    
+
         DB::beginTransaction();
         try {
+            $uploadPath = null;
             if ($request->hasFile('upload')) {
-                $filename = time().'_'.$request->file('upload')->getClientOriginalName();
+                $filename = time() . '_' . $request->file('upload')->getClientOriginalName();
                 $request->file('upload')->move(public_path('student-photos'), $filename);
-    
-                // Save record
-                $student = Student::create([
-                    'first_name'    => $validated['first_name'],
-                    'last_name'     => $validated['last_name'],
-                    'gender'        => $validated['gender'],
-                    'date_of_birth' => $validated['date_of_birth'],
-                    'roll'          => $validated['roll'],
-                    'blood_group'   => $validated['blood_group'],
-                    'religion'      => $validated['religion'],
-                    'email'         => $validated['email'],
-                    'class'         => $validated['class'],
-                    'section'       => $validated['section'],
-                    'admission_id'  => $validated['admission_id'],
-                    'phone_number'  => $validated['phone_number'],
-                    'upload'        => 'student-photos/'.$filename,
-                ]);
-    
-                DB::commit();
-                return redirect()->back()->with('success', 'Student has been added successfully!');
+                $uploadPath = 'student-photos/' . $filename;
             }
-    
-            Log::warning('File Upload Missing', ['email' => $validated['email']]);
-            return redirect()->back()->with('error', 'Upload file is required.');
-        } catch (\Exception $e) {
-            DB::rollback();
-            Log::error('Student Save Failed', ['error' => $e->getMessage(), 'email' => $validated['email'] ?? null]);
-            return redirect()->back()->with('error', 'Failed to add new student: ' . $e->getMessage());
-        }
-    }
-    
-    /** View */
-    public function studentEdit($id)
-    {
-        $studentEdit = Student::where('id',$id)->first();
-        return view('student.edit-student',compact('studentEdit'));
-    }
 
-    /** Update Record */
-    public function studentUpdate(Request $request)
-    {
-        $validated = $request->validate([
-            'id'            => 'required|exists:students,id',
-            'first_name'    => 'required|string|max:255',
-            'last_name'     => 'required|string|max:255',
-            'gender'        => 'required|not_in:0',
-            'date_of_birth' => 'required|date',
-            'roll'          => 'required|string|max:50',
-            'blood_group'   => 'required|string|max:10',
-            'religion'      => 'required|string|max:50',
-            'email'         => 'required|email|unique:students,email,' . $request->id,
-            'class'         => 'required|string|max:50',
-            'section'       => 'required|string|max:50',
-            'admission_id'  => 'required|string|unique:students,admission_id,' . $request->id,
-            'phone_number'  => 'required|numeric|digits_between:8,15',
-            'upload'        => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image_hidden'  => 'nullable|string', // The old image path
-        ]);
-    
-        DB::beginTransaction();
-        try {
-            $student = Student::findOrFail($validated['id']);
-            $oldImagePath = $student->upload;
-    
-            if ($request->hasFile('upload')) {
-                if (!empty($oldImagePath) && file_exists(public_path($oldImagePath))) {
-                    unlink(public_path($oldImagePath));
-                }
-                $upload_file = time() . '_' . $request->file('upload')->getClientOriginalName();
-                $request->file('upload')->move(public_path('student-photos'), $upload_file);
-            } else {
-                $upload_file = $oldImagePath;
+            $passportPhotoPath = null;
+            if ($request->hasFile('passport_photo')) {
+                $filename = time() . '_passport_' . $request->file('passport_photo')->getClientOriginalName();
+                $request->file('passport_photo')->move(public_path('student-photos/passport'), $filename);
+                $passportPhotoPath = 'student-photos/passport/' . $filename;
             }
-    
-            // Update the student record
-            $student->update([
-                'first_name'    => $validated['first_name'],
-                'last_name'     => $validated['last_name'],
-                'gender'        => $validated['gender'],
-                'date_of_birth' => $validated['date_of_birth'],
-                'roll'          => $validated['roll'],
-                'blood_group'   => $validated['blood_group'],
-                'religion'      => $validated['religion'],
-                'email'         => $validated['email'],
-                'class'         => $validated['class'],
-                'section'       => $validated['section'],
-                'admission_id'  => $validated['admission_id'],
-                'phone_number'  => $validated['phone_number'],
-                'upload'        => 'student-photos/' . $upload_file, // Update the upload field
+
+            $medicalFormPath = null;
+            if ($request->hasFile('medical_form')) {
+                $filename = time() . '_medical_' . $request->file('medical_form')->getClientOriginalName();
+                $request->file('medical_form')->move(public_path('student-photos/medical'), $filename);
+                $medicalFormPath = 'student-photos/medical/' . $filename;
+            }
+
+            Student::create([
+                // Student core
+                'first_name'     => $request->first_name,
+                'middle_name'    => $request->middle_name,
+                'last_name'      => $request->last_name,
+                'gender'         => $request->gender,
+                'date_of_birth'  => $request->date_of_birth,
+                'phone_number'   => $request->phone_number,
+                'admission_id'   => $request->admission_id,
+                'nida_number'    => $request->nida_number,
+                'email'          => $request->email,
+                'region'         => $request->region,
+                'district'       => $request->district,
+                'ward'           => $request->ward,
+                'street'         => $request->street,
+                'education_level'=> $request->education_level,
+                'course_applied' => $request->course_applied,
+                'upload'         => $uploadPath,
+                'passport_photo' => $passportPhotoPath,
+                'medical_form'   => $medicalFormPath,
+                // Father
+                'father_first_name'  => $request->father_first_name,
+                'father_middle_name' => $request->father_middle_name,
+                'father_last_name'   => $request->father_last_name,
+                'father_phone'       => $request->father_phone,
+                'father_region'      => $request->father_region,
+                'father_district'    => $request->father_district,
+                'father_ward'        => $request->father_ward,
+                'father_street'      => $request->father_street,
+                'father_address'     => $request->father_address,
+                // Mother
+                'mother_first_name'  => $request->mother_first_name,
+                'mother_middle_name' => $request->mother_middle_name,
+                'mother_last_name'   => $request->mother_last_name,
+                'mother_phone'       => $request->mother_phone,
+                'mother_region'      => $request->mother_region,
+                'mother_district'    => $request->mother_district,
+                'mother_ward'        => $request->mother_ward,
+                'mother_street'      => $request->mother_street,
+                'mother_address'     => $request->mother_address,
+                // Guardian
+                'guardian_first_name'  => $request->guardian_first_name,
+                'guardian_middle_name' => $request->guardian_middle_name,
+                'guardian_last_name'   => $request->guardian_last_name,
+                'guardian_address'     => $request->guardian_address,
+                'guardian_region'      => $request->guardian_region,
+                'guardian_district'    => $request->guardian_district,
+                'guardian_ward'        => $request->guardian_ward,
+                'guardian_street'      => $request->guardian_street,
+                'guardian_phone'       => $request->guardian_phone,
+                // Sponsor
+                'sponsor_first_name'   => $request->sponsor_first_name,
+                'sponsor_middle_name'  => $request->sponsor_middle_name,
+                'sponsor_last_name'    => $request->sponsor_last_name,
+                'sponsor_region'       => $request->sponsor_region,
+                'sponsor_district'     => $request->sponsor_district,
+                'sponsor_ward'         => $request->sponsor_ward,
+                'sponsor_street'       => $request->sponsor_street,
+                'sponsor_title'        => $request->sponsor_title,
+                'sponsor_organization' => $request->sponsor_organization,
+                'sponsor_business'     => $request->sponsor_business,
+                'sponsor_phone'        => $request->sponsor_phone,
+                'sponsor_email'        => $request->sponsor_email,
             ]);
-    
+
             DB::commit();
-            return redirect()->back()->with('success', 'Updated successfully!');
+
+            // Auto-create login account for the student
+            if ($request->email) {
+                User::firstOrCreate(
+                    ['email' => $request->email],
+                    [
+                        'name'      => $request->first_name . ' ' . $request->last_name,
+                        'email'     => $request->email,
+                        'role_name' => 'Student',
+                        'password'  => Hash::make('12345678'),
+                        'status'    => 'Active',
+                    ]
+                );
+            }
+
+            return redirect()->back()->with('success', 'Student added successfully!');
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('Student Update Failed', ['error' => $e->getMessage(), 'id' => $validated['id']]);
-            return redirect()->back()->with('error', 'Failed to update record: ' . $e->getMessage());
+            Log::error($e->getMessage());
+            return redirect()->back()->with('error', 'Failed: ' . $e->getMessage());
         }
     }
-
-    /** Delete Record */
-    public function studentDelete(Request $request)
-    {
-        $validated = $request->validate([
-            'id'     => 'required|exists:students,id',
-            'upload' => 'nullable|string',
-        ]);
-    
-        DB::beginTransaction();
-        try {
-            $student = Student::findOrFail($validated['id']);
-            $avatarPath = $student->upload;
-            $student->delete();
-            if (!empty($avatarPath)) {
-                $fullPath = public_path($avatarPath);
-                if (file_exists($fullPath)) {
-                    unlink($fullPath);
-                }
-            }
-    
-            DB::commit();
-            return redirect()->back()->with('success', 'Student deleted successfully :)');
-        
-        } catch (\Exception $e) {
-            DB::rollback();
-            Log::error('Student Deletion Failed', ['error' => $e->getMessage(), 'id' => $validated['id']]);
-            return redirect()->back()->with('error', 'Failed to delete record: ' . $e->getMessage());
-        }
-    }    
 
     /** student profile page */
     public function studentProfile($id)
     {
-        $studentProfile = Student::where('id',$id)->first();
-        return view('student.student-profile',compact('studentProfile'));
+        $student = Student::findOrFail($id);
+        return view('student.student-profile', compact('student'));
+    }
+
+    /** update student status (Approve / Reject) */
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:Approved,Rejected,Pending',
+        ]);
+
+        Student::findOrFail($id)->update(['status' => $request->status]);
+
+        return redirect()->back()->with('success', 'Student status updated to ' . $request->status . '.');
+    }
+
+    /** student edit page */
+    public function studentEdit($id)
+    {
+        $studentEdit = Student::findOrFail($id);
+        return view('student.edit-student', compact('studentEdit'));
+    }
+
+    /** update student record - FULL UPDATE FOR 52 FIELDS */
+    public function studentUpdate(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $student = Student::findOrFail($request->id);
+
+            $uploadPath = $student->upload;
+            if ($request->hasFile('upload')) {
+                $filename = time() . '_' . $request->file('upload')->getClientOriginalName();
+                $request->file('upload')->move(public_path('student-photos'), $filename);
+                $uploadPath = 'student-photos/' . $filename;
+            }
+
+            $passportPath = $student->passport_photo;
+            if ($request->hasFile('passport_photo')) {
+                $filename = time() . '_passport_' . $request->file('passport_photo')->getClientOriginalName();
+                $request->file('passport_photo')->move(public_path('student-photos/passport'), $filename);
+                $passportPath = 'student-photos/passport/' . $filename;
+            }
+
+            $data = $request->all();
+            $data['upload'] = $uploadPath;
+            $data['passport_photo'] = $passportPath;
+
+            $student->update($data);
+
+            DB::commit();
+            return redirect()->route('student/list')->with('success', 'Student information updated successfully!');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Update Error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to update record: ' . $e->getMessage());
+        }
+    }
+
+    /** delete record */
+    public function studentDelete(Request $request)
+    {
+        Student::destroy($request->id);
+        return redirect()->back()->with('success', 'Deleted successfully!');
     }
 }

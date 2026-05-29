@@ -168,5 +168,4 @@ class Message {
     }
 }
 
-// Example usage
-const imessage = new Message('imessage');
+// Instance is created on demand in master.blade.php — do not auto-instantiate here.

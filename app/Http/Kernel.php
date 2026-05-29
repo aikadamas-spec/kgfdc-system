@@ -26,6 +26,9 @@ class Kernel extends HttpKernel
     /**
      * The application's route middleware groups.
      *
+     * Note: Laravel 11+ loads the live web stack from bootstrap/app.php.
+     * TrackVisitors is registered there — not in this legacy Kernel file.
+     *
      * @var array<string, array<int, class-string|string>>
      */
     protected $middlewareGroups = [

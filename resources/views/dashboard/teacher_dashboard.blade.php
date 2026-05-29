@@ -7,7 +7,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="page-sub-header">
-                            <h3 class="page-title">Welcome Jonathan!</h3>
+                            <h3 class="page-title">Welcome, {{ Session::get('name') }}!</h3>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                                 <li class="breadcrumb-item active">Teacher</li>
@@ -24,7 +24,7 @@
                             <div class="db-widgets d-flex justify-content-between align-items-center">
                                 <div class="db-info">
                                     <h6>Total Classes</h6>
-                                    <h3>04/06</h3>
+                                    <h3 style="white-space:nowrap;">04/06</h3>
                                 </div>
                                 <div class="db-icon">
                                     <img src="{{ URL::to('assets/img/icons/teacher-icon-01.svg') }}" alt="Dashboard Icon">
@@ -39,7 +39,7 @@
                             <div class="db-widgets d-flex justify-content-between align-items-center">
                                 <div class="db-info">
                                     <h6>Total Students</h6>
-                                    <h3>40/60</h3>
+                                    <h3 style="white-space:nowrap;">40/60</h3>
                                 </div>
                                 <div class="db-icon">
                                     <img src="{{ URL::to('assets/img/icons/dash-icon-01.svg') }}" alt="Dashboard Icon">
@@ -54,7 +54,7 @@
                             <div class="db-widgets d-flex justify-content-between align-items-center">
                                 <div class="db-info">
                                     <h6>Total Lessons</h6>
-                                    <h3>30/50</h3>
+                                    <h3 style="white-space:nowrap;">30/50</h3>
                                 </div>
                                 <div class="db-icon">
                                     <img src="{{ URL::to('assets/img/icons/teacher-icon-02.svg') }}" alt="Dashboard Icon">
@@ -69,7 +69,7 @@
                             <div class="db-widgets d-flex justify-content-between align-items-center">
                                 <div class="db-info">
                                     <h6>Total Hours</h6>
-                                    <h3>15/20</h3>
+                                    <h3 style="white-space:nowrap;">15/20</h3>
                                 </div>
                                 <div class="db-icon">
                                     <img src="{{ URL::to('assets/img/icons/teacher-icon-03.svg') }}" alt="Dashboard Icon">
@@ -160,14 +160,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dash-widget">
-                                    <div class="circle-bar circle-bar1">
-                                        <div class="circle-graph1" data-percent="50">
-                                            <div class="progress-less">
-                                                <b>55/60</b>
-                                                <p>Lesson Progressed</p>
+                                <div class="dash-widget p-3">
+                                    <div class="text-center mb-3">
+                                        <h2 class="mb-0" style="font-size:2rem;font-weight:700;color:#3D5EE1;">55/60</h2>
+                                        <p class="text-muted mb-2">Lessons Progressed</p>
+                                        <div class="progress" style="height:10px;border-radius:5px;">
+                                            <div class="progress-bar" role="progressbar"
+                                                style="width:92%;background:linear-gradient(90deg,#3D5EE1,#70C4CF);"
+                                                aria-valuenow="92" aria-valuemin="0" aria-valuemax="100">
                                             </div>
                                         </div>
+                                        <small class="text-muted mt-1 d-block">92% Complete</small>
                                     </div>
                                 </div>
                             </div>

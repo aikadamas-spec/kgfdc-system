@@ -64,7 +64,7 @@
                                                 </td>
                                                 <td>{{ $value->gender }}</td>
                                                 <td>{{ $value->fees_type }}</td>
-                                                <td>${{ $value->fees_amount }}</td>
+                                                <td>TZS {{ number_format($value->fees_amount) }}</td>
                                                 <td>{{ $value->paid_date }}</td>
                                                 <td class="text-end">
                                                     <span class="badge badge-success">Paid</span>

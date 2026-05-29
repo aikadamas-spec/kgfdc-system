@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('content')
+@php use Illuminate\Support\Facades\Storage; @endphp
     <div class="page-wrapper">
         <div class="content container-fluid">
             <div class="page-header">
@@ -50,25 +51,29 @@
                             <h5 class="card-title">Website Basic Details</h5>
                         </div>
                         <div class="card-body pt-0">
-                            <form>
+                            <form action="{{ route('setting/update') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
                                 <div class="settings-form">
                                     <div class="form-group">
                                         <label>Website Name <span class="star-red">*</span></label>
-                                        <input type="text" class="form-control" placeholder="Enter Website Name">
+                                        <input type="text" class="form-control" name="website_name"
+                                            placeholder="Enter Website Name"
+                                            value="{{ $settings['website_name'] ?? 'Kigamboni FDC' }}">
                                     </div>
                                     <div class="form-group">
                                         <p class="settings-label">Logo <span class="star-red">*</span></p>
                                         <div class="settings-btn">
-                                            <input type="file" accept="image/*" name="image" id="file"
-                                                onchange="loadFile(event)" class="hide-input">
-                                            <label for="file" class="upload">
+                                            <input type="file" accept="image/*" name="logo" id="logo-file"
+                                                onchange="loadFile(event, 'logo-preview')" class="hide-input">
+                                            <label for="logo-file" class="upload">
                                                 <i class="feather-upload"></i>
                                             </label>
                                         </div>
-                                        <h6 class="settings-size">Recommended image size is <span>150px x
-                                                150px</span></h6>
+                                        <h6 class="settings-size">Recommended image size is <span>150px x 150px</span></h6>
                                         <div class="upload-images">
-                                            <img src="{{ URL::to('assets/img/logo.png') }}" alt="Image">
+                                            <img id="logo-preview"
+                                                src="{{ !empty($settings['logo']) ? Storage::url($settings['logo']) : URL::to('assets/img/logo.png') }}"
+                                                alt="Logo">
                                             <a href="javascript:void(0);" class="btn-icon logo-hide-btn">
                                                 <i class="fa fa-times-circle"></i>
                                             </a>
@@ -77,9 +82,9 @@
                                     <div class="form-group">
                                         <p class="settings-label">Favicon <span class="star-red">*</span></p>
                                         <div class="settings-btn">
-                                            <input type="file" accept="image/*" name="image" id="file"
-                                                onchange="loadFile(event)" class="hide-input">
-                                            <label for="file" class="upload">
+                                            <input type="file" accept="image/*,.ico" name="favicon" id="favicon-file"
+                                                onchange="loadFile(event, 'favicon-preview')" class="hide-input">
+                                            <label for="favicon-file" class="upload">
                                                 <i class="feather-upload"></i>
                                             </label>
                                         </div>
@@ -88,7 +93,9 @@
                                         </h6>
                                         <h6 class="settings-size mt-1">Accepted formats: only png and ico</h6>
                                         <div class="upload-images upload-size">
-                                            <img src="{{ URL::to('assets/img/favicon.png') }}" alt="Image">
+                                            <img id="favicon-preview"
+                                                src="{{ !empty($settings['favicon']) ? Storage::url($settings['favicon']) : URL::to('assets/img/favicon.png') }}"
+                                                alt="Favicon">
                                             <a href="javascript:void(0);" class="btn-icon logo-hide-btn">
                                                 <i class="fa fa-times-circle"></i>
                                             </a>
@@ -97,8 +104,7 @@
                                     <div class="row">
                                         <div class="col-lg-5 col-md-6">
                                             <div class="form-group">
-                                                <div
-                                                    class="status-toggle d-flex justify-content-between align-items-center">
+                                                <div class="status-toggle d-flex justify-content-between align-items-center">
                                                     <p class="mb-0">RTL</p>
                                                     <input type="checkbox" id="status_1" class="check">
                                                     <label for="status_1" class="checktoggle">checkbox</label>
@@ -109,7 +115,7 @@
                                     <div class="form-group mb-0">
                                         <div class="settings-btns">
                                             <button type="submit" class="btn btn-orange">Update</button>
-                                            <button type="submit" class="btn btn-grey">Cancel</button>
+                                            <a href="{{ route('setting/page') }}" class="btn btn-grey">Cancel</a>
                                         </div>
                                     </div>
                                 </div>
@@ -185,4 +191,16 @@
             </div>
         </div>
     </div>
+@section('script')
+<script>
+    function loadFile(event, previewId) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById(previewId);
+            if (output) output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
+@endsection
 @endsection

@@ -99,10 +99,10 @@
                                                         <tr>
                                                             <td>{{ $value->items }}</td>
                                                             <td>{{ $value->category }}</td>
-                                                            <td>${{ $value->amount }}</td>
+                                                            <td>TZS {{ number_format($value->amount) }}</td>
                                                             <th>{{ $value->quantity }}</th>
                                                             <th>{{ $value->discount }}%</th>
-                                                            <td class="text-end">${{ $value->price }}</td>
+                                                            <td class="text-end">TZS {{ $value->price }}</td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
@@ -127,13 +127,13 @@
                                     <div class="invoice-total-card">
                                         <div class="invoice-total-box">
                                             <div class="invoice-total-inner">
-                                                <p>Taxable <span>$6,660.00</span></p>
-                                                <p>Additional Charges <span>$6,660.00</span></p>
-                                                <p>Discount <span>$3,300.00</span></p>
-                                                <p class="mb-0">Sub total <span>$3,300.00</span></p>
+                                                <p>Taxable <span>TZS 6,660.00</span></p>
+                                                <p>Additional Charges <span>TZS 6,660.00</span></p>
+                                                <p>Discount <span>TZS 3,300.00</span></p>
+                                                <p class="mb-0">Sub total <span>TZS 3,300.00</span></p>
                                             </div>
                                             <div class="invoice-total-footer">
-                                                <h4>Total Amount <span>${{ $invoiceView->total_amount }}</span></h4>
+                                                <h4>Total Amount <span>TZS {{ $invoiceView->total_amount }}</span></h4>
                                             </div>
                                         </div>
                                     </div>

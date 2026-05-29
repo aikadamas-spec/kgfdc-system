@@ -1,3 +1,30 @@
+{{-- ═══════════════════════════════════════════════════════════════════
+     Sidebar — 8 Core Subsystems (clean English titles)
+     1  Dashboard
+     2  Students
+     3  Teachers
+     4  Financials
+     5  Lesson Tracking
+     6  Attendance
+     7  Exam Reports
+     8  SMS / Announcements
+     ─────────────────────────────────────────────────────────────────
+     Admin-only (below the 8):  User Management · Settings
+     ═══════════════════════════════════════════════════════════════════ --}}
+<style>
+    /* ── Extra breathing room so text & arrow don't crowd the right edge ── */
+    #sidebar-menu ul li a {
+        padding-right: 20px;
+    }
+    #sidebar-menu ul li a .menu-arrow {
+        right: 14px;
+    }
+    /* Submenu child links inherit the same right padding */
+    #sidebar-menu ul ul li a {
+        padding-right: 20px;
+    }
+</style>
+
 <div class="sidebar" id="sidebar">
     <div class="sidebar-inner slimscroll">
         <div id="sidebar-menu" class="sidebar-menu">
@@ -7,23 +34,28 @@
                 </li>
 
                 @php
-                    $userRoleName = Session::get('role_name', '');
+                    $userRoleName   = Session::get('role_name', '');
                     $normalizedRole = strtolower(trim($userRoleName));
-                    $isSuperAdmin  = ($normalizedRole === 'super admin');
-                    $isAdmin       = ($normalizedRole === 'admin');
-                    $isCoordinator = ($normalizedRole === 'coordinator');
-                    $isTeacher     = ($normalizedRole === 'teacher');
-                    $isStudent     = ($normalizedRole === 'student');
-                    $isAccountant  = ($normalizedRole === 'accountant');
+                    $isSuperAdmin   = ($normalizedRole === 'super admin');
+                    $isAdmin        = ($normalizedRole === 'admin');
+                    $isCoordinator  = ($normalizedRole === 'coordinator');
+                    $isTeacher      = ($normalizedRole === 'teacher');
+                    $isStudent      = ($normalizedRole === 'student');
+                    $isAccountant   = ($normalizedRole === 'accountant');
 
-                    // Menus restricted to Super Admin only
+                    // ── Visibility rules per role ──────────────────────────────
                     $superAdminOnlyMenus = ['User Management', 'Settings'];
 
-                    // Menus hidden from Coordinator, Teacher, Student, Accountant
-                    $adminOnlyMenus = ['User Management', 'Settings', 'Invoices', 'Accounts', 'Departments'];
+                    $adminOnlyMenus = [
+                        'User Management', 'Settings',
+                        'Financials', 'Invoices', 'Accounts',
+                    ];
 
-                    // Menus Accountant can see
-                    $accountantMenus = ['Dashboard', 'Invoices', 'Accounts'];
+                    $accountantMenus = ['Dashboard', 'Financials'];
+
+                    // ── Items that always show a dropdown arrow regardless of
+                    //    whether they currently have DB children (placeholders) ──
+                    $alwaysArrow = ['Attendance', 'Exam Reports'];
                 @endphp
 
                 @foreach ($menus as $menu)
@@ -31,10 +63,8 @@
                         $isDashboard = ($menu->title === 'Dashboard');
 
                         if ($isSuperAdmin) {
-                            // Super Admin sees everything
                             $shouldShow = true;
                         } elseif ($isAdmin) {
-                            // Admin sees everything EXCEPT User Management and Settings
                             $shouldShow = !in_array($menu->title, $superAdminOnlyMenus);
                         } elseif ($isCoordinator) {
                             $shouldShow = !in_array($menu->title, $adminOnlyMenus);
@@ -46,18 +76,23 @@
                             $shouldShow = !in_array($menu->title, $adminOnlyMenus);
                         }
 
-                        $showChildren = $menu->children->count() && !$isDashboard;
-                        $menuHref = $isDashboard ? route('home') : ($menu->route ? route($menu->route) : '#');
+                        // Show arrow when: item has DB children OR it's a known
+                        // placeholder that will gain children in a future step.
+                        $hasChildren  = $menu->children->count() && !$isDashboard;
+                        $showArrow    = $hasChildren || in_array($menu->title, $alwaysArrow);
+                        $showChildren = $hasChildren;
+
+                        $menuHref = $isDashboard
+                            ? route('home')
+                            : ($menu->route ? route($menu->route) : '#');
                     @endphp
 
                     @if($shouldShow)
-                        {{-- Use 'submenu' only when the item has children; leaf items get no extra class --}}
-                        <li class="{{ $isDashboard ? '' : ($showChildren ? 'submenu' : '') }} {{ set_active($menu->active_routes) }}
-                            {{ (isset($menu->pattern) && request()->is($menu->pattern)) ? 'active' : '' }}">
+                        <li class="{{ $isDashboard ? '' : ($showChildren ? 'submenu' : '') }} {{ set_active($menu->active_routes) }} {{ (isset($menu->pattern) && request()->is($menu->pattern)) ? 'active' : '' }}">
                             <a href="{{ $menuHref }}">
                                 <i class="{{ $menu->icon }}"></i>
                                 <span>{{ $menu->title }}</span>
-                                @if ($showChildren)
+                                @if ($showArrow)
                                     <span class="menu-arrow"></span>
                                 @endif
                             </a>
@@ -66,8 +101,7 @@
                                     @foreach ($menu->children as $child)
                                         <li>
                                             <a href="{{ $child->route ? route($child->route) : '#' }}"
-                                               class="{{ set_active($child->active_routes) }}
-                                                      {{ (isset($child->pattern) && request()->is($child->pattern)) ? 'active' : '' }}">
+                                               class="{{ set_active($child->active_routes) }} {{ (isset($child->pattern) && request()->is($child->pattern)) ? 'active' : '' }}">
                                                 {{ $child->title }}
                                             </a>
                                         </li>

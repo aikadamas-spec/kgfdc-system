@@ -1,13 +1,13 @@
 {{-- ═══════════════════════════════════════════════════════════════════
      Sidebar — 8 Core Subsystems (clean English titles)
      1  Dashboard
-     2  Students
-     3  Teachers
+     2  Student Management
+     3  Staff Management
      4  Financials
      5  Lesson Tracking
      6  Attendance
      7  Exam Reports
-     8  SMS / Announcements
+     8  SMS & Alerts
      ─────────────────────────────────────────────────────────────────
      Admin-only (below the 8):  User Management · Settings
      ═══════════════════════════════════════════════════════════════════ --}}
@@ -55,7 +55,15 @@
 
                     // ── Items that always show a dropdown arrow regardless of
                     //    whether they currently have DB children (placeholders) ──
-                    $alwaysArrow = ['Attendance', 'Exam Reports'];
+                    $alwaysArrow = [
+                        'Student Management',
+                        'Staff Management',
+                        'Financials',
+                        'Lesson Tracking',
+                        'Attendance',
+                        'Exam Reports',
+                        'SMS & Alerts',
+                    ];
                 @endphp
 
                 @foreach ($menus as $menu)
@@ -77,7 +85,7 @@
                         }
 
                         // Show arrow when: item has DB children OR it's a known
-                        // placeholder that will gain children in a future step.
+                        // subsystem that will always have (or gain) children.
                         $hasChildren  = $menu->children->count() && !$isDashboard;
                         $showArrow    = $hasChildren || in_array($menu->title, $alwaysArrow);
                         $showChildren = $hasChildren;
@@ -99,12 +107,14 @@
                             @if ($showChildren)
                                 <ul>
                                     @foreach ($menu->children as $child)
-                                        <li>
-                                            <a href="{{ $child->route ? route($child->route) : '#' }}"
-                                               class="{{ set_active($child->active_routes) }} {{ (isset($child->pattern) && request()->is($child->pattern)) ? 'active' : '' }}">
-                                                {{ $child->title }}
-                                            </a>
-                                        </li>
+                                        @if($child->is_active)
+                                            <li>
+                                                <a href="{{ ($child->route && $child->route !== '#') ? route($child->route) : '#' }}"
+                                                   class="{{ set_active($child->active_routes) }} {{ (isset($child->pattern) && request()->is($child->pattern)) ? 'active' : '' }}">
+                                                    {{ $child->title }}
+                                                </a>
+                                            </li>
+                                        @endif
                                     @endforeach
                                 </ul>
                             @endif
